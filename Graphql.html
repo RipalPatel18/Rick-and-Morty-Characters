@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GraphQL - Rick and Morty</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #f0f0f0;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 1rem;
+    }
+
+    #character-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 2vw;
+    }
+
+    .character-card {
+      margin: 1vw;
+      text-align: center;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      padding: 1rem;
+      width: 150px;
+    }
+
+    .character-card img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .loading {
+      text-align: center;
+      font-size: 1.2rem;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rick and Morty Characters</h1>
+  <p class="loading">Loading characters...</p>
+
+  <script>
+    const graphqlEndpoint = 'https://rickandmortyapi.com/graphql';
+
+    const query = `
+      query GetCharacterData {
+        characters(filter: { species: "Human" }) {
+          results {
+            id
+            name
+            image
+          }
+        }
+      }
+    `;
+
+    fetch(graphqlEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify({ query }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      const loading = document.querySelector('.loading');
+      loading.remove(); 
+
+      
+      const characters = data.data.characters.results;
+      if (!characters || characters.length === 0) {
+        const message = document.createElement('p');
+        message.textContent = 'No characters found.';
+        message.style.textAlign = 'center';
+        document.body.appendChild(message);
+        return;
+      }
+
+      const container = document.createElement('div');
+      container.id = 'character-container';
+
+      characters.forEach(character => {
+        const div = document.createElement('div');
+        div.className = 'character-card';
+        div.innerHTML = `
+          <h3>${character.name}</h3>
+          <img src="${character.image}" alt="${character.name}">
+        `;
+        container.appendChild(div);
+      });
+
+      document.body.appendChild(container);
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+      const loading = document.querySelector('.loading');
+      loading.textContent = 'Failed to load characters.';
+    });
+  </script>
+</body>
+</html>
