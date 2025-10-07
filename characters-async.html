@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rick and Morty Characters</title>
+
+    <style>
+
+    h1 {
+        text-align: center;
+        font-family: 'Courier New', Courier, monospace;
+    }
+    img {
+        width: 30vw;
+        margin: 0 0 2.5vw 2.5vw;
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        line-height: 100%;
+    }
+
+    </style>
+
+</head>
+<body>
+
+    <h1>Rick and Morty Characters</h1>
+
+    <script>
+
+    // https://livecode.codeadam.ca/
+    // https://rickandmortyapi.com/documentation
+
+    let url = "https://rickandmortyapi.com/api/character";
+    console.log("1. Define URL");
+
+    /*
+    let fetchResponse = fetch(url);
+    console.log("2. Initaite Fetch");
+
+    let jsonResponse = fetchResponse.then((response) => {
+
+        console.log("5. Initiating json conversion");
+        return response.json();
+        
+    });
+    console.log("3. Defining the fetch response");
+
+    jsonResponse.then((data) => {
+
+        console.log(data);
+        console.log("6. Initiate display");
+
+        let images = document.getElementById("images");
+
+        data.results.forEach(function(character) { 
+            
+            console.log(character.name); 
+            let newImage = document.createElement("img");
+            newImage.src = character.image;
+
+            images.append(newImage);
+    
+        });
+
+    });
+    console.log("4. Define the json response");
+    */
+
+    fetch(url)
+        .then((response) => {
+            
+            return response.json();
+
+        })
+        .then((data) => {
+
+            let images = document.getElementById("images");
+
+            data.results.forEach(function(character) { 
+                
+                console.log(character.name); 
+                let newImage = document.createElement("img");
+                newImage.src = character.image;
+
+                images.append(newImage);
+        
+            });
+            
+        })
+        .catch((error) => {
+
+            console.log(error);
+
+        });
+        
+    </script>
+
+    <div id="images"></div>
+
+    
+</body>
+</html>
